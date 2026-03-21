@@ -9,10 +9,6 @@
 ## Progress
 
 - [x] **Day 1** — AVL Tree
-- [ ] Day 2 — Max-Heap + console game
-- [ ] Day 3 — Raylib window + layout
-- [ ] Day 4 — AVL Tree graphics + volunteer cards
-- [ ] Day 5 — Polish + GitHub showcase
 
 ---
 
@@ -63,19 +59,3 @@ which is the whole point of this project.
 ```bash
 g++ -std=c++17 -o test AVLTree.cpp test_avl.cpp && ./test
 ```
-
-### Sample Output
-
-```
-=============================
- TEST 1: Insert 4 con
-=============================
-          /--- v Vet1 [sick:90 h:1]
-     /--- d Cho1 [sick:70 h:2]
-m Meo1 [sick:45 h:3]
-     \--- r Tho1 [sick:30 h:1]
-So node : 4
-Rotation: 0
-```
-
----
