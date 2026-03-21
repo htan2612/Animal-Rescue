@@ -79,5 +79,3 @@ Rotation: 0
 ```
 
 ---
-
-*Course: CSC10004 – Data Structures and Algorithms · HCMUS*
