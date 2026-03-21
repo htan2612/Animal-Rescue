@@ -1,0 +1,8 @@
+﻿*.o
+*.exe
+shelter
+.vscode/
+.DS_Store
+assets/*.png
+assets/*.ttf
+assets/*.wav
