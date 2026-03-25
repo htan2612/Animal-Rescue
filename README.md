@@ -1,83 +1,122 @@
 # 🐾 Animal Rescue Shelter
 
-> Volunteers heal sick animals based on priority —
-> a hands-on demonstration of **AVL Tree** and **Max-Heap Priority Queue** in C++17.
-> All data structures are implemented from scratch without STL containers.
+A small console game where volunteers heal sick animals based on priority.  
+Built to practice **AVL Tree** and **Max-Heap** in C++17 — everything coded from scratch, no STL containers.
+
+---
+
+## How to Run
+
+```bash
+# Step 1 — compile all files
+g++ -std=c++17 -g AVLTree.cpp MaxHeap.cpp main.cpp -o rescue.exe
+
+# Step 2 — run
+./rescue.exe
+```
+
+Or press `Ctrl+Shift+B` in VS Code (uses the `build project` task).
+
+---
+
+## What It Does
+
+Sick animals are stored in an **AVL Tree** sorted by sickness level.  
+Each round, all animals get loaded into a **Max-Heap** sorted by energy — higher energy acts first.  
+A volunteer heals each animal by 25 sickness points per turn.  
+When an animal hits 0 sickness, it leaves the shelter. The game ends when everyone is healed.
 
 ---
 
 ## Progress
 
 - [x] **Day 1** — AVL Tree
-- [ ] Day 2 — Max-Heap + console game
-- [ ] Day 3 — Raylib window + layout
-- [ ] Day 4 — AVL Tree graphics + volunteer cards
-- [ ] Day 5 — Polish + GitHub showcase
+- [x] **Day 2** — Max-Heap + console game loop
+
 
 ---
 
-## Day 1 — AVL Tree
-
-The AVL Tree stores sick animals sorted by **sickness level**.
-Volunteers always treat the most critical animal first — `avlfindMax()`.
-
-### File Structure
+## File Structure
 
 ```
 Animal-Rescue/
-├── AVLTree.h       ← struct declarations + function prototypes
-├── AVLTree.cpp     ← implementation
+├── AVLTree.h       ← structs + function prototypes
+├── AVLTree.cpp     ← AVL tree implementation
+├── MaxHeap.h       ← heap struct + prototypes
+├── MaxHeap.cpp     ← heap implementation
+├── main.cpp        ← game loop
 └── README.md
-```
-
-### Functions
-
-| Function | Description | Complexity |
-|---|---|---|
-| `avlInsert(root, animal)` | Add animal to tree | O(log n) |
-| `avlRemove(root, key, name)` | Remove animal from tree | O(log n) |
-| `avlfindMax(root)` | Find most critical animal | O(log n) |
-| `avlfindMin(root)` | Find least critical animal | O(log n) |
-| `avlPrintTree(root, 0, false)` | Print tree sideways to console | O(n) |
-| `avlPrintInOrder(root)` | Print sorted list ascending | O(n) |
-
-### Why AVL Tree?
-
-Each healing turn requires 3 operations:
-1. `avlfindMax()` — find the sickest animal
-2. `avlRemove()` — remove it (sickness level changes → must remove)
-3. `avlInsert()` — re-insert with updated sickness level
-
-With a plain array: findMax is O(n), remove is O(n) — too slow with many animals.
-AVL Tree guarantees all 3 operations in **O(log n)** in every case,
-because the tree self-balances after every insert and remove.
-
-### Why not `std::map`?
-
-`std::map` uses a Red-Black Tree internally — also O(log n), but a black-box.
-Writing AVL Tree from scratch makes the rotation logic visible and explainable,
-which is the whole point of this project.
-
-### Compile & Run
-
-```bash
-g++ -std=c++17 -o test AVLTree.cpp test_avl.cpp && ./test
-```
-
-### Sample Output
-
-```
-=============================
- TEST 1: Insert 4 con
-=============================
-          /--- v Vet1 [sick:90 h:1]
-     /--- d Cho1 [sick:70 h:2]
-m Meo1 [sick:45 h:3]
-     \--- r Tho1 [sick:30 h:1]
-So node : 4
-Rotation: 0
 ```
 
 ---
 
-*Course: CSC10004 – Data Structures and Algorithms · HCMUS*
+## AVL Tree
+
+Stores animals sorted by `sickness` (the key).  
+Self-balances after every insert and remove using rotations.
+
+| Function | Description | Time |
+|---|---|---|
+| `avlInsert(root, animal)` | Add animal to tree | O(log n) |
+| `avlRemove(root, key, name)` | Remove animal by sickness + name | O(log n) |
+| `avlfindMin(root)` | Least sick animal | O(log n) |
+| `avlfindMax(root)` | Most sick animal | O(log n) |
+| `avlPrintTree(root, 0, false)` | Print tree sideways | O(n) |
+| `avlPrintInOrder(root)` | Print sorted list | O(n) |
+
+**Why AVL and not just an array?**  
+Each turn needs 3 steps: find the animal, remove it (sickness changes so the key changes), then re-insert.  
+With an array that's O(n) per step. AVL Tree keeps all 3 at O(log n) because it stays balanced.
+
+**Why not `std::map`?**  
+`std::map` is a Red-Black Tree under the hood — also O(log n), but you can't see how it works.  
+Writing AVL from scratch makes the rotation logic visible, which is the point of this project.
+
+---
+
+## Max-Heap
+
+A fixed-size array-based max-heap sorted by `energy`.  
+Used as a turn queue each round — highest energy animal acts first.
+
+| Function | Description |
+|---|---|
+| `heapPush(heap, animal)` | Add animal to heap |
+| `heapPop(heap)` | Remove and return top animal |
+| `heapPeek(heap)` | Look at top animal without removing |
+| `heapIsEmpty(heap)` | Check if heap is empty |
+| `heapPrint(heap)` | Print all animals in heap order |
+
+---
+
+## Sample Output
+
+```
+==============================
+ Animal Rescue Shelter — Day 2
+==============================
+Admitted: 5 animals
+
+          /--- p Pepper [sick:90 h:1]
+     /--- s Sunny [sick:55 h:2]
+m Mochi [sick:75 h:3]
+     \--- d Biscuit [sick:40 h:1]
+          \--- c Coco [sick:20 h:1]
+
+==============================
+ Round 1
+==============================
+
+Turn order (highest energy acts first):
+  [0] c Coco    energy=9  sick=20
+  [1] d Biscuit energy=8  sick=40
+  ...
+```
+
+---
+
+## Notes
+
+- Duplicate sickness keys are handled — `avlRemove` matches both key and name.
+- `g_rotationCount` and `g_nodeCount` are global counters tracked across all operations.
+- Max heap size is 256 (`MAX_HEAP_SIZE` in MaxHeap.h), which is enough for this game.
